@@ -59,7 +59,6 @@ for(i in  c(1:length(frases_oracion))){
 }
 
 
-
 # Prueba 2
 ## Aquí obtenemos el 2 que ofrece get_sentiment
 sum(DICCIONARIO[which(DICCIONARIO$word %in% frases_oracion), "value"])
