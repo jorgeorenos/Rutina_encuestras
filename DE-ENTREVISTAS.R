@@ -1,4 +1,6 @@
 ######DIRECCIONAMIENTO ESTRATÉGICO######
+library(syuzhet)
+# Aquí añadimos un cambio
 
 #Aquí podemos introducir las respuestas de la entrevista realizada.
 respuesta <- ("Ahora ahora tal vez voy bueno bueno bueno bueno bueno a regresar un poco a lo que proponía de conocimientos básicos en Administración Pública ¿Por qué? Porque la reestructura actual eh busca como tal, tener una reestructura que responda al nuevo modelo de atención. Nosotros como el órgano técnico de la Administración pública tendríamos, o se busca ser un referente para toda la institucionalidad pública. Siendo un instituto tendríamos que dar un ordenamiento, tendríamos que ser el referente para ministerios para secretarías y demás instituciones. Sin embargo, creo muy sinceramente que estamos con un déficit de de de la capacidad de respuesta de las personas que actualmente están, hay personas que tal vez cumplen un nivel académico pero... no sé, les falta ese ese, les falta, no sé si experiencia en el ámbito público, o esa capacidad de respuesta porque, ahora bien, derivado lo que mencionas como era como como referentes tendríamos que tener unas 
@@ -19,7 +21,7 @@ oraciones_vector
 
 DICCIONARIO <- data.frame(
   "word" = c("prioridad","bueno","malo", "mala gestión", "poco", "engorroso", "cumplimiento", "no", "sí", "cumple", "ayudar", "ayudamos", "juntos"),
-  "value" = c(1,3,-2,-5,-1,-2,1,-1,1,1,4,4,3) )
+  "value" = c(1, 3,-2,-5,-1,-2,1,-1,1,1,4,4,3))
 
 
 write.csv(x=DICCIONARIO, file = "DICCIONARIO.csv", row.names = FALSE)
@@ -27,13 +29,32 @@ write.csv(x=DICCIONARIO, file = "DICCIONARIO.csv", row.names = FALSE)
 DICCIONARIO_DE <- read.csv("DICCIONARIO.csv")
 method <- "custom"
 
-DE_oraciones <- get_sentiment(texto_palabras, method = method, lexicon = DICCIONARIO_DE)
+DE_oraciones <- get_sentiment(oraciones_vector, method = method, lexicon = DICCIONARIO_DE)
 
-plot(DE_oraciones,
+Dplot(DE_oraciones,
      type="l",
      main = "Estrategia de Direccionamiento",
      sub = "Análisis de gestión en respuesta",
      xlab = "Oraciones", ylab = "DIRECCIONAMIENTO ESTRATÉGICO "
      )
 
+
+# Prueba
+
+oracion <- oraciones_vector[1]
+
+frases_oracion <- get_tokens(oracion)
+
+valores = c()
+
+for(i in  c(1:length(frases_oracion))){
+  
+  if (frases_oracion[i] %in% DICCIONARIO$word){
+    valores[i] <- DICCIONARIO$value[which(DICCIONARIO$word == frases_oracion[i])]
+  
+    } else {
+    valores[i] <- 0
+  }
+    
+}
 
