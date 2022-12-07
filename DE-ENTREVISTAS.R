@@ -1,5 +1,7 @@
 ######DIRECCIONAMIENTO ESTRATÉGICO######
 
+# Aquí añadimos un cambio
+
 #Aquí podemos introducir las respuestas de la entrevista realizada.
 respuesta <- ("Ahora ahora tal vez voy bueno bueno bueno bueno bueno a regresar un poco a lo que proponía de conocimientos básicos en Administración Pública ¿Por qué? Porque la reestructura actual eh busca como tal, tener una reestructura que responda al nuevo modelo de atención. Nosotros como el órgano técnico de la Administración pública tendríamos, o se busca ser un referente para toda la institucionalidad pública. Siendo un instituto tendríamos que dar un ordenamiento, tendríamos que ser el referente para ministerios para secretarías y demás instituciones. Sin embargo, creo muy sinceramente que estamos con un déficit de de de la capacidad de respuesta de las personas que actualmente están, hay personas que tal vez cumplen un nivel académico pero... no sé, les falta ese ese, les falta, no sé si experiencia en el ámbito público, o esa capacidad de respuesta porque, ahora bien, derivado lo que mencionas como era como como referentes tendríamos que tener unas 
 
