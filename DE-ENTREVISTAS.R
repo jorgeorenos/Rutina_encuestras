@@ -1,5 +1,5 @@
 ######DIRECCIONAMIENTO ESTRATÉGICO######
-
+library(syuzhet)
 # Aquí añadimos un cambio
 
 #Aquí podemos introducir las respuestas de la entrevista realizada.
@@ -21,7 +21,7 @@ oraciones_vector
 
 DICCIONARIO <- data.frame(
   "word" = c("prioridad","bueno","malo", "mala gestión", "poco", "engorroso", "cumplimiento", "no", "sí", "cumple", "ayudar", "ayudamos", "juntos"),
-  "value" = c(1,3,-2,-5,-1,-2,1,-1,1,1,4,4,3) )
+  "value" = c(1, 3,-2,-5,-1,-2,1,-1,1,1,4,4,3))
 
 
 write.csv(x=DICCIONARIO, file = "DICCIONARIO.csv", row.names = FALSE)
@@ -29,13 +29,32 @@ write.csv(x=DICCIONARIO, file = "DICCIONARIO.csv", row.names = FALSE)
 DICCIONARIO_DE <- read.csv("DICCIONARIO.csv")
 method <- "custom"
 
-DE_oraciones <- get_sentiment(texto_palabras, method = method, lexicon = DICCIONARIO_DE)
+DE_oraciones <- get_sentiment(oraciones_vector, method = method, lexicon = DICCIONARIO_DE)
 
-plot(DE_oraciones,
+Dplot(DE_oraciones,
      type="l",
      main = "Estrategia de Direccionamiento",
      sub = "Análisis de gestión en respuesta",
      xlab = "Oraciones", ylab = "DIRECCIONAMIENTO ESTRATÉGICO "
      )
 
+
+# Prueba
+
+oracion <- oraciones_vector[1]
+
+frases_oracion <- get_tokens(oracion)
+
+valores = c()
+
+for(i in  c(1:length(frases_oracion))){
+  
+  if (frases_oracion[i] %in% DICCIONARIO$word){
+    valores[i] <- DICCIONARIO$value[which(DICCIONARIO$word == frases_oracion[i])]
+  
+    } else {
+    valores[i] <- 0
+  }
+    
+}
 
