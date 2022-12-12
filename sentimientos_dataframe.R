@@ -31,3 +31,6 @@ summary(valor_pregunta)
 
 valor_general <- sum(valor_pregunta$negativa*-1 + valor_pregunta$positiva)
 valor_general
+
+# prueba parafos
+parrafos <- get_tokens(respuesta, pattern = "\\n")
