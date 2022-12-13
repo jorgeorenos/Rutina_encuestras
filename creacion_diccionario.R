@@ -25,5 +25,3 @@ diccionario[pos_negativas,"negativas"] <- abs(diccionario$Puntuacion[pos_negativ
 ## Imputando valores de palabras positivas
 diccionario[,"positivas"] <- 0
 diccionario[pos_positivas, "positivas"] <- diccionario$Puntuacion[pos_positivas]
-
-write.csv()
