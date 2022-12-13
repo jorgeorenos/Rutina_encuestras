@@ -14,4 +14,16 @@ positivas <- diccionario %>% filter(Puntuacion >= 0) %>% select(Palabra, Puntuac
 negativas <- diccionario %>% filter(Puntuacion < 0) %>% select(Palabra, Puntuacion)
 
 # Creando un solo diccionario
+## Obtenemos la posición de las palabras positivas y negativas
+pos_negativas <- fmatch(negativas$Palabra, diccionario$Palabra)
+pos_positivas <- fmatch(positivas$Palabra, diccionario$Palabra)
 
+## Imputamos valores negativos negativas
+diccionario[,"negativas"] <- 0 
+diccionario[pos_negativas,"negativas"] <- abs(diccionario$Puntuacion[pos_negativas])
+
+## Imputando valores de palabras positivas
+diccionario[,"positivas"] <- 0
+diccionario[pos_positivas, "positivas"] <- diccionario$Puntuacion[pos_positivas]
+
+write.csv()
