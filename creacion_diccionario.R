@@ -53,13 +53,11 @@ positivas <- nrc[which(nrc$Emotion %in% c("anticipation", "joy", "surprise", "tr
 negativas <- nrc[which(nrc$Emotion %in% c("anger", "disgust", "fear", "sadness")), 3]
 
 nrc$negativas <- nrc$negativas*-1
-nrc$Emotion.Intensity.Score <- nrc$negativas
+
+nrc <- nrc %>% mutate(intensidad = positivas + negativas)
 
 sum(nrc$positivas) - sum(positivas)
 sum(nrc$negativas) + sum(negativas)
-
-# Cambiando el nombre de algunas columnas de nrc
-names(nrc)[3] <- "intensidad"
 
 # Debido a que dan cero las restas, la selección se hizo de forma correcta
 
