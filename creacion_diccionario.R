@@ -5,10 +5,10 @@ library(fastmatch)
 ## Diccionario traducido del repositorio https://github.com/jboscomendoza/rpubs.git
 
 download.file("https://raw.githubusercontent.com/jboscomendoza/rpubs/master/sentimientos_afinn/lexico_afinn.en.es.csv",
-              destfile = "diccionario_afin.csv")
+              destfile = "Diccionarios/diccionario_afinn.csv")
 
 # Cargando el diccionario para extrer positivas y negativas
-diccionario <- read.csv("diccionario_afin.csv", fileEncoding = "latin1")
+diccionario <- read.csv("Diccionarios/diccionario_afinn.csv", fileEncoding = "latin1")
 
 # Mutate para generar nuevas columas
 ## Columnas con el valor absoluto de cada palabra.
@@ -23,5 +23,5 @@ negativas <- diccionario %>% filter(Puntuacion < 0) %>% select(Palabra, Puntuaci
 sum(diccionario$negativas) + sum(negativas$Puntuacion)
 sum(diccionario$positivas) - sum(positivas$Puntuacion)
 
-write.csv(diccionario, file = "Diccionarios/diccionario_afin_modificado.csv",
+write.csv(diccionario, file = "Diccionarios/diccionario_afinn_modificado.csv",
           fileEncoding = "latin1")
