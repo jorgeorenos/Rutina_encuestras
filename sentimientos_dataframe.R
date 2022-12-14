@@ -16,11 +16,11 @@ palabras <- get_tokens(respuesta)
 
 # Cargamos el diccionario
 # Es un dataframe con 3 columnas
-diccionario <- read.csv("DICCIONARIO.csv")
+diccionario <- read.csv("Diccionarios/diccionario_afin_modificado.csv", fileEncoding = "latin1")
 
 # Ahora obtenemos las valoraciones
 # Buscamos las coincidencias del diccionario en la respuesta
-valor_pregunta <- diccionario[which(diccionario$word %in% palabras), c("word","value", "positiva", "negativa")] 
+valor_pregunta <- diccionario[which(diccionario$Palabra %in% palabras), c("Palabra","Puntuacion", "positivas", "negativas")] 
 
 # Resumimos la información de dataframe
 # vemos que la frase tiene una valoración más positiva que negativa. 
@@ -34,3 +34,5 @@ valor_general
 
 # prueba parafos
 parrafos <- get_tokens(respuesta, pattern = "\\n")
+
+
