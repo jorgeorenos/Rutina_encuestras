@@ -16,7 +16,7 @@ palabras <- get_tokens(respuesta)
 
 # Cargamos el diccionario
 # Es un dataframe con 3 columnas
-diccionario <- read.csv("Diccionarios/diccionario_afin_modificado.csv", fileEncoding = "latin1")
+diccionario <- read.csv("Diccionarios/diccionario_afinn_modificado.csv", fileEncoding = "latin1")
 
 # Ahora obtenemos las valoraciones
 # Buscamos las coincidencias del diccionario en la respuesta
