@@ -7,21 +7,21 @@ library(fastmatch)
 download.file("https://raw.githubusercontent.com/jboscomendoza/rpubs/master/sentimientos_afinn/lexico_afinn.en.es.csv",
               destfile = "diccionario_afin.csv")
 
-## Cargando el diccionario para extrer positivas y negativas
+# Cargando el diccionario para extrer positivas y negativas
 diccionario <- read.csv("diccionario_afin.csv", fileEncoding = "latin1")
 
+# Mutate para generar nuevas columas
+## Columnas con el valor absoluto de cada palabra.
+diccionario <- diccionario %>% mutate("positivas" = ifelse(Puntuacion >= 0, Puntuacion, 0),
+                                      "negativas" = ifelse(Puntuacion < 0, abs(Puntuacion), 0))
+
+# Identificación de palabras positivas y negativas
 positivas <- diccionario %>% filter(Puntuacion >= 0) %>% select(Palabra, Puntuacion)
 negativas <- diccionario %>% filter(Puntuacion < 0) %>% select(Palabra, Puntuacion)
 
-# Creando un solo diccionario
-## Obtenemos la posición de las palabras positivas y negativas
-pos_negativas <- fmatch(negativas$Palabra, diccionario$Palabra)
-pos_positivas <- fmatch(positivas$Palabra, diccionario$Palabra)
+# comprobamos que la imputación fue correcta
+sum(diccionario$negativas) + sum(negativas$Puntuacion)
+sum(diccionario$positivas) - sum(positivas$Puntuacion)
 
-## Imputamos valores negativos negativas
-diccionario[,"negativas"] <- 0 
-diccionario[pos_negativas,"negativas"] <- abs(diccionario$Puntuacion[pos_negativas])
-
-## Imputando valores de palabras positivas
-diccionario[,"positivas"] <- 0
-diccionario[pos_positivas, "positivas"] <- diccionario$Puntuacion[pos_positivas]
+write.csv(diccionario, file = "Diccionarios/diccionario_afin_modificado.csv",
+          fileEncoding = "latin1")
