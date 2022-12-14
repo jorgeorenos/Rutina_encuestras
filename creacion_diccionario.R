@@ -30,7 +30,39 @@ write.csv(afinn, file = "Diccionarios/diccionario_afinn_modificado.csv",
 # CREACION DICCIONARIO "NRC"
 
 # Cargando el diccionario
-nrc <- read.table("Diccionarios/Spanish-NRC-Emolex.txt", header = TRUE, sep = "\t")
+nrc <- read.table("Diccionarios/Spanish-NRC-Emotion-Intensity-Lexicon-v1.txt", header = TRUE, sep = "\t")
 
+## Vamos a separar las intensidades de las emocines en positivas y negativas
+## Segiremos el siguiente esquema
+### anger = negativa, anticipation = positiva, disgust = negativa, fear = negativa, joy = positiva
+### sadness = negativa, surprise = positiva, trust = positiva
+
+nrc <- nrc %>% mutate(negativas = ifelse(Emotion == "anger", Emotion.Intensity.Score, 
+                                  ifelse(Emotion == "disgust", Emotion.Intensity.Score,
+                                  ifelse(Emotion == "fear", Emotion.Intensity.Score,
+                                  ifelse(Emotion == "sadness", Emotion.Intensity.Score, 0)))))
+
+nrc <- nrc %>% mutate(positivas = ifelse(Emotion == "anticipation", Emotion.Intensity.Score, 
+                                  ifelse(Emotion == "joy", Emotion.Intensity.Score,
+                                  ifelse(Emotion == "surprise", Emotion.Intensity.Score,
+                                  ifelse(Emotion == "trust", Emotion.Intensity.Score, 0)))))
+
+# confirmamos si clasificamos de forma correcta
+# separamos intensidades positivas y negativas
+positivas <- nrc[which(nrc$Emotion %in% c("anticipation", "joy", "surprise", "trust")),3]
+negativas <- nrc[which(nrc$Emotion %in% c("anger", "disgust", "fear", "sadness")), 3]
+
+nrc$negativas <- nrc$negativas*-1
+nrc$Emotion.Intensity.Score <- nrc$negativas*-1
+
+sum(nrc$positivas) - sum(positivas)
+sum(nrc$negativas) + sum(negativas)
+
+# Cambiando el nombre de algunas columnas de nrc
+names(nrc)[3] <- "intensidad"
+
+# Debido a que dan cero las restas, la selección se hizo de forma correcta
+
+# Escribimos el nuevo diccionario nrc
 write.csv(nrc, file = "Diccionarios/diccionario_nrc.csv",
           fileEncoding = "latin1")
