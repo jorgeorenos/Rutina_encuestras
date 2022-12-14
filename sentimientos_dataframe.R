@@ -16,7 +16,8 @@ palabras <- get_tokens(respuesta)
 
 # Cargamos el diccionario
 # Es un dataframe con 3 columnas
-diccionario <- read.csv("Diccionarios/diccionario_afinn_modificado.csv", fileEncoding = "latin1")
+diccionario <- read.csv("https://raw.githubusercontent.com/jorgeorenos/Rutina_encuestras/modificaciones/Diccionarios/diccionario_afinn_modificado.csv",
+                        fileEncoding = "latin1")
 
 # Ahora obtenemos las valoraciones
 # Buscamos las coincidencias del diccionario en la respuesta
@@ -29,10 +30,12 @@ summary(valor_pregunta)
 
 # Obteniendo la valoración general
 
-valor_general <- sum(valor_pregunta$negativa*-1 + valor_pregunta$positiva)
+valor_general <- sum(valor_pregunta$Puntuacion)
 valor_general
 
 # prueba parafos
 parrafos <- get_tokens(respuesta, pattern = "\\n")
 
-
+plot(valor_pregunta$Puntuacion, type = "l",
+     xlab = "", ylab = "Valoración", main = "Evolución del texto")
+points(valor_pregunta$Puntuacion)
