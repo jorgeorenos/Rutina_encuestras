@@ -53,7 +53,7 @@ positivas <- nrc[which(nrc$Emotion %in% c("anticipation", "joy", "surprise", "tr
 negativas <- nrc[which(nrc$Emotion %in% c("anger", "disgust", "fear", "sadness")), 3]
 
 nrc$negativas <- nrc$negativas*-1
-nrc$Emotion.Intensity.Score <- nrc$negativas*-1
+nrc$Emotion.Intensity.Score <- nrc$negativas
 
 sum(nrc$positivas) - sum(positivas)
 sum(nrc$negativas) + sum(negativas)
