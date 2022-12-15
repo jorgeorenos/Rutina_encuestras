@@ -10,7 +10,8 @@ sentimientos <- function(texto, diccionario = "nrc"){
   nrc <- read.csv("https://raw.githubusercontent.com/jorgeorenos/Rutina_encuestras/modificaciones/Diccionarios/diccionario_nrc.csv",
                   fileEncoding = "latin1")
   
-  Ponderacion <- nrc[which(nrc$Spanish.Word %in% palabras), c("Spanish.Word", "intensidad","positivas", "negativas")]
+  Ponderacion <- nrc[which(nrc$Spanish.Word %in% palabras), c("Spanish.Word", "intensidad","positivas", 
+                                                              "negativas", "Emotion.Intensity.Score")]
   names(Ponderacion)[1] <- "Palabra"
   
   valor <- sum(Ponderacion$positivas) + sum(Ponderacion$negativas)  
