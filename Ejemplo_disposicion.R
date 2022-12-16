@@ -1,11 +1,11 @@
-source("funcion_sentimiento.R")
+source("funcion_disposicion.R")
 
 # Ejemplo aplicado a un libro
 
 texto <- scan(file = "https://raw.githubusercontent.com/programminghistorian/jekyll/gh-pages/assets/galdos_miau.txt", 
               fileEncoding = "UTF-8", what = character(), sep = "\n", allowEscapes = T)
 
-analisis <- sentimientos(texto)
+analisis <- disposicion(texto)
 
 summary(analisis[[1]])
 analisis[[2]]
@@ -25,16 +25,16 @@ respuestas <- read.csv("Entrevistas/Estructura ideal para la lectura de entrevis
 # Filtrando la característica "estrategia de direccionamiento"
 estrategia <- respuestas %>% filter(Característica == "ESTRATEGIA DE DIRECCIONAMIENTO")
 
-analisis_sentimiento <- list()
+analisis_disp <- list()
 
 for (i in seq_along(estrategia$Respuesta)) {
-  analisis_sentimiento[[i]] <- sentimientos(estrategia$Respuesta[i])    
+  analisis_disp[[i]] <- disposicion(estrategia$Respuesta[i])    
 }
 
 valor <- c()
-for (i in seq_along(analisis_sentimiento)) {
-  print(paste("valor respuesta", i, analisis_sentimiento[[i]][[2]]))  
-  valor[i] <- analisis_sentimiento[[i]][[2]]
+for (i in seq_along(analisis_disp)) {
+  print(paste("valor respuesta", i, analisis_disp[[i]][[2]]))  
+  valor[i] <- analisis_disp[[i]][[2]]
 }
 
 x <- data.frame(x = 1:20, valor)

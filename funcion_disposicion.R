@@ -1,6 +1,6 @@
 # Construcción de la función para el análisis de sentimientos
 
-sentimientos <- function(texto, diccionario = "nrc"){
+disposicion <- function(texto, diccionario = "nrc"){
   library(tidyverse)
   texto <- tolower(texto)
   palabras <- unlist(strsplit(texto, "\\W"))
