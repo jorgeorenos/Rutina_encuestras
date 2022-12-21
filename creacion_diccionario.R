@@ -32,6 +32,10 @@ write.csv(afinn, file = "Diccionarios/diccionario_afinn_modificado.csv",
 # Cargando el diccionario
 nrc <- read.table("Diccionarios/Spanish-NRC-Emotion-Intensity-Lexicon-v1.txt", header = TRUE, sep = "\t")
 
+# Pasamos las palabras en español a minúsculas
+nrc$Spanish.Word <- tolower(nrc$Spanish.Word)
+
+
 ## Vamos a separar las intensidades de las emocines en positivas y negativas
 ## Segiremos el siguiente esquema
 ### anger = negativa, anticipation = positiva, disgust = negativa, fear = negativa, joy = positiva
