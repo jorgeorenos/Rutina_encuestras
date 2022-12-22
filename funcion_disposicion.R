@@ -22,7 +22,7 @@ disposicion <- function(texto, diccionario = "nrc"){
     afinn <- read.csv("https://raw.githubusercontent.com/jorgeorenos/Rutina_encuestras/modificaciones/Diccionarios/diccionario_afinn_modificado.csv",
                       fileEncoding = "latin1")
     
-    Ponderacion <- afinn[which(afinn$Palabra %in% palabras), c("Palabra", "Puntuación", "positivas", "negativas")]
+    Ponderacion <- afinn[which(afinn$Palabra %in% palabras), c("Palabra", "Puntuacion", "positivas", "negativas")]
     valor <- sum(Ponderacion$Puntuacion)
     
   }
