@@ -28,7 +28,7 @@ library(tidyverse)
 library(syuzhet)
 
 # Cargamos la función disposición que utilizarémos
-source("D:/Documentos/INAP/Rutina_encuestras/funcion_disposicion.R")
+source("E:/Documentos/INAP/Rutina_encuestras/funcion_disposicion.R")
 ```
 
 # Análisis de disposición de la característica *"Estrategia de direccionamiento"*
@@ -92,7 +92,7 @@ ggplot() +
 En el apartado anterior se mostró como la característica *estrategia de direccionamiento* posee una disposición positiva por parte de los entrevistados. Luego de ello se procedió a aplicar el análisis de disposición a extractos de texto dispersos en la entrevista pero que guardaban una relación con dicha característica.
 
 ```{r Codigos_dedoose, codigos_estrategia, echo=FALSE}
-codigos <- scan(file = "D:/Documentos/INAP/Rutina_encuestras/Pruebas/ED Dedoose 01 Est_Dir.txt",
+codigos <- scan(file = "E:/Documentos/INAP/Rutina_encuestras/Pruebas/ED Dedoose 01 Est_Dir.txt",
                 what = character(), sep = "\n", fileEncoding = "UTF-8",
                 allowEscapes = T)
 ```
@@ -133,7 +133,7 @@ ggplot() +
 
 En este apartado se presenta la transformación aplicada a los resultados del análisis de disposición para acotarlos en el intervalo de -1 a 1. Esto como un paso intermedio en la elaboración del índice *Guía de entrevista para personal directivo*.
 
-La transformación es haciendo uso de la función arco tangente modificada.
+La transformación hace uso de la función arco tangente pero modificada.
 
 $$
 y = \frac{2}{\pi}arctg(\frac{x}{k})
@@ -189,7 +189,8 @@ Para tal fin se procedió a elaborar una *medida de proporcionalidad global* que
 
 $$
 P_{max,i}=\frac{max}{x_1} + \frac{max}{x_2} + \frac{max}{x_3} + ...+ \frac{max}{x_2}
-$$ Que puede ser escrita de la siguiente forma:
+$$ 
+Que puede ser escrita de la siguiente forma:
 
 $$
 P_{max,i} = \sum_{i=1}^n\frac{max}{x_i}
@@ -203,7 +204,7 @@ $x_i: \text{Es la i-ésima de las observaciones}$
 
 Además $x_i$ puede ser igual a $max$
 
-Una vez se calcula la *medida de proporcionalidad global* sobre los datos originales se vuleve a estimar una vez efectuada la transformación para cada uno de los valores de $k$ seleccionados. El mejor valor de $k$ es aquel que hace mínima la diferencia entre la medida original y la obtenida de la transforamción para el $k$ asociado.
+Una vez se calcula la *medida de proporcionalidad global* sobre los datos originales esta se vuelve a estimar sobre los datos transformados para cada uno de los valores de $k$ considerados. El mejor valor de $k$ es aquel que hace mínima la diferencia entre la medida original y la obtenida de la transforamción para el $k$ asociado.
 
 ## Selección de la transformación para el análisis de *"Estrategia de direccionamiento"*
 
@@ -213,9 +214,7 @@ p_max_original <- sum(max(analisis_codigos)/analisis_codigos[max(analisis_codigo
 
 ```
 
-El primer paso para seleccionar la mejor transformación consistió en calcular la *medida de proporcionalidad global* sobre los datos originales[^1], ésta dió como resultado **29.33**.
-
-[^1]: Para los cálculos se considero que $x_i$ = $\text{max}$ estaría dentro de la suma.
+El primer paso en la selección de la mejor transformación consistió en calcular la *medida de proporcionalidad global* sobre los datos originales[^1], ésta dió como resultado **29.33**.
 
 En segundo lugar se procedió a calcular la medida para valores de $k\geq1$ obteniendo los siguientes resultados:
 
@@ -297,3 +296,5 @@ ggplot() +
         legend.position = "bottom")
 
 ```
+
+[^1]: Para los cálculos se considero que $x_i$ = $\text{max}$ estaría dentro de la suma.
