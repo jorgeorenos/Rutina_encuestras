@@ -3,8 +3,10 @@ title: "Análisis direccionamiento estratégico"
 author: "Jorge Orenos"
 output:
   pdf_document:
-    toc: TRUE
-    df_print: "kable"
+    toc: yes
+    df_print: kable
+  word_document:
+    toc: yes
 lang: "ES-es"
 fontsize: 11pt
 ---
@@ -66,7 +68,7 @@ Sumando las valoraciones de cada respuesta se obtiene la disposición general. A
 
 Lo anterior también puede representarse en términos gráficos. Como se observa, la mayoría de las respuestas representadas por barras están por encíma del cero mientras que unas pocas lo están por debajo. Esto refuerza el hecho de que la disposición general es positiva.
 
-```{r grafica_estrategia, echo=FALSE, message=FALSE}
+```{r grafica_estrategia, echo=FALSE, message=FALSE, fig.dim=c(4,3.6)}
 # Graficamos los resultados
 ggplot() +
   geom_col(aes(x = 1:length(analisis), y = analisis), fill = "#2C5985") +
@@ -77,7 +79,7 @@ ggplot() +
        subtitle = "Estrategia de direccionamiento \nEntrevista a personal",
        x = "Número de pregunta", y = "Valoración") +
   guides(fill = guide_legend(title = "")) +
-  theme_minimal() +
+  theme_minimal(base_size = 8) +
   theme(plot.title = element_text(face = "bold"),
         legend.position = "bottom")
   
@@ -106,7 +108,7 @@ Al sumar las valoraciones de cada uno de los textos se obtuvo como resultado 11 
 
 De igual forma, esto se puede visualizar por medio del gráfico de valoraciones de cada uno de los textos en el cual se observa que la mayoría están sobre el cero.
 
-```{r grafica_estrategia_codigos, echo=FALSE, message=FALSE}
+```{r grafica_estrategia_codigos, echo=FALSE, message=FALSE, fig.dim=c(4,3.6)}
 ggplot() +
   geom_col(aes(x = 1:length(analisis_codigos), y = analisis_codigos), 
            fill = "#2C5985") +
@@ -118,16 +120,16 @@ ggplot() +
        subtitle = "Estrategia de direccionamiento \nCódigos dedoose",
        x = "Número de texto", y = "Disposición") +
   guides(fill = guide_legend(title = "")) +
-  theme_minimal() +
+  theme_minimal(base_size = 8) +
   theme(plot.title = element_text(face = "bold"),
         legend.position = "bottom")
 ```
 
 # Transformación aplicada a los datos
 
-En este apartado se presenta dos alternativas para acotar en el intervalo de -1 a 1 los resultados del análisis de disposición. Esto como un paso intermedio en la elaboración del índice *Guía de entrevista para personal directivo*.
+En este apartado se presenta la transformación aplicada a los resultados del análisis de disposición para acotarlos en el intervalo de -1 a 1. Esto como un paso intermedio en la elaboración del índice *Guía de entrevista para personal directivo*.
 
-La primera de las propuestas es una tranformación haciendo uso de la función arcotangente.
+La transformación es haciendo uso de la función arco tangente modificada.
 
 $$
 y = \frac{2}{\pi}arctg(\frac{x}{k})
@@ -139,18 +141,18 @@ $x = \text{Es el resultado del analisis de disposicón}$
 
 $k = \text{Es una constante mayor o igual que 1}$
 
-Aplicando la transformación para distintos valores de k las valoraciones tendrían el siguiente comportamiento.
+Aplicando la transformación para distintos valores de k los resultados tendrían el siguiente comportamiento.
 
-```{r, echo=FALSE, message=FALSE}
+```{r comportamiento_ks, echo=FALSE, message=FALSE}
 # Generamos los datos
-x <- c(-10:10)
+x <- seq(-10, 10, 0.5)
 y <- list()
 k <- seq(1, 5, by = 0.5)
 id <- list()
 
 for (i in seq_along(k)) {
   y[[i]] <- (2/pi)*atan(x/k[i])
-  id[[i]] <- replicate(21, paste("k =", k[i]))
+  id[[i]] <- replicate(length(x), paste("k =", k[i]))
 }
 rm(i)
 
@@ -160,22 +162,50 @@ atan <- data.frame("x" = rep(x, length(k)), "y" = unlist(y), "id" = unlist(id))
 rm(x,y,k,id)
 ```
 
-```{r comportamiento_arctg, echo=FALSE, fig.dim = c(5,3)}
-
-ggplot() +
-  geom_point(aes(x = -10:10, y = (2/pi)*atan(-10:10)), 
-             alpha = 0.4, colour = "#324DA0") +
-  geom_line(aes(x = -10:10, y = (2/pi)*atan(-10:10)), 
-            colour = "#324DA0") +
+```{r grafica_comportamiento, echo = FALSE, message = FALSE, fig.dim=c(5.5,4)}
+ggplot(data = atan, aes(x = x, y = y, colour = id)) +
+  geom_line() +
+  paletteer::scale_color_paletteer_d("awtools::bpalette") +
   labs(title = "Comportamiento",
-       subtitle = "Transformación arcotangente",
-       y = "Transformación", x = "Valor observado") +
+       subtitle = "Distintos valores de k",
+       y = "Transformación", x = "",
+       colour = "") +
   theme_minimal() +
   theme(plot.title = element_text(face = "bold"))
+```
+
+Como se observa, cuando k aumenta la transformación se aproxima a un comportamiento lineal. El objetivo es encontrar un valor de k tal que al momento de aplicar la transforamción no exista una discrepancia en la proporción que existe entre los datos, entiendose la proporción como el conciente entre la observación $x_i$ y otra $x_j$.
+
+$$
+\text{Proporción}_{i,j} = \frac{x_i}{x_j}
+$$
+
+Para tal fin se procedió a elaborar una *medida de proporcionalidad global* que sirvió de parámetro para la elección del mejor valor de k. Esta medida de proporcionalidad está construída de la siguiente maenra:
+
+$P_{max,i}=\frac{max}{x_1} + \frac{max}{x_2} + \frac{max}{x_3} + ...+ \frac{max}{x_2}$
+
+Que puede ser escrita de la siguiente forma:
+
+$P_{max,i} = \sum_{i=1}^n\frac{max}{x_i}$
+
+Donde:
+
+$\text{max: Es el valor máximo de las observaciones}$
+
+$x_i: \text{Es la i-ésima de las observaciones}$
+
+Además $x_i$ puede ser igual a $max$
+
+Una vez se calcula la *medida de proporcionalidad global* sobre los datos originales se vuleve a estimar una vez efectuada la transformación para cada uno de los valores de $k$ seleccionados. El mejor valor de $k$ es aquel que hace mínima la diferencia entre la medida original y la obtenida de la transforamción para el $k$ asociado.
+
+## Selección de la transformación para el análisis de *"Estrategia de direccionamiento"*
+
+```{r proporcionalidad_global, echo=FALSE}
+
+
 
 ```
 
-```{r}
-ggplot(data = atan, aes(x = x, y = y, colour = id)) +
-  geom_line()
-```
+El primer paso para seleccionar la mejor transformación consistió en calcular la *medida de proporcionalidad global* sobre los datos originales. La medida dió como resultado[^1]
+
+[^1]: Para los cálculos se considero que $x_i$ = $\\text{max}$ estaría dentro de la suma.
