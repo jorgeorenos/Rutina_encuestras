@@ -15,3 +15,8 @@ lang: es
 Al momento de leer un texto es posible que percibamos si el autor del texto se ecuentra enojado, triste, alegre o sumamente eufórico. Esto lo hacemos de forma intuitiva sin pensar en las razones de fondo del por qué nuestro cerebro detecta los sentimientos plasmados en el texto.
 
 En este sentído podemos asignarle un calificativo 
+
+```{r, eval=FALSE}
+x <- c(1:10)
+```
+

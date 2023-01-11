@@ -1,9 +1,9 @@
 ---
 title: "Índice temático"
-output: pdf_document
-  toc: TRUE
-lang: ES-es
-date: "2022-12-12"
+output:
+  pdf_document:
+    toc: TRUE
+lang: "ES-es"
 ---
 
 \pagebreak

@@ -1,0 +1,300 @@
+---
+title: "Análisis direccionamiento estratégico"
+author: "Jorge Orenos"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: 3
+    number_sections: false
+    df_print: kable
+lang: "es"
+documentclass: article
+classoption: letter
+geometry: margin = 0.8in
+---
+
+\pagebreak
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(fig.align = "center")
+```
+
+```{r, include=FALSE, echo=FALSE}
+# Limpiamos el espacio de trabajo
+rm(list = ls())
+
+# Cargamos las librerias
+library(tidyverse)
+library(syuzhet)
+
+# Cargamos la función disposición que utilizarémos
+source("E:/Documentos/INAP/Rutina_encuestras/funcion_disposicion.R")
+```
+
+# Análisis de disposición de la característica *"Estrategia de direccionamiento"*
+
+A continuación, se presentan los resultados del análisis de disposición aplicado a las respuestas referentes a la característica *estrategia de direccionamiento*, Cada una de las respuestas tiene asignado un valor que puede ser positivo, negativo o cero. Valores mayores a cero se clasificaron cómo disposición positiva mientras que valores inferiores a cero cómo disposición negativa.
+
+```{r, Cargando respustas,echo=FALSE, include=FALSE}
+# Cargamos las respuestas
+respustas <- read.csv("~/INAP/Rutina_encuestras/Entrevistas/Estructura ideal para la lectura de entrevistas-CSV.csv", 
+                      sep = ";")
+
+# Filtrando las despuestas relacionadas a direccionamiento estratégico
+respustas <- respustas %>% filter(Característica == "ESTRATEGIA DE DIRECCIONAMIENTO")
+```
+
+```{r, Analisis_estrategia, include=FALSE}
+# Con un ciclo calculamos el valor de cada disposición
+analisis <- c()
+
+for (i in seq_along(respustas$Respuesta)) {
+    analisis[i] <- sum(disposicion(respustas$Respuesta[i], 
+                                     diccionario = "nrc"))
+}
+rm(i)
+```
+
+```{r, impresion_rsultados, echo = FALSE, comment = "", results = 'hold'}
+
+for (i in seq(1, 17, by = 4)) {
+  print(c(paste("Pregunta", i, "valoración", analisis[i]),
+          paste("Pregunta", i+1, "valoración", analisis[i+1]),
+          paste("Pregunta", i+2, "valoración", analisis[i+2]),
+          paste("Pregunta", i+3, "valoración", analisis[i+3])))
+}
+
+```
+
+Sumando las valoraciones de cada respuesta se obtiene la disposición general. Al hacer la suma se obtuvo un total de 51 que indica una disposición positiva para esta característica.
+
+Lo anterior también puede representarse en términos gráficos. Como se observa, la mayoría de las respuestas representadas por barras están por encíma del cero mientras que unas pocas lo están por debajo. Esto refuerza el hecho de que la disposición general es positiva.
+
+```{r grafica_estrategia, echo=FALSE, message=FALSE, fig.dim=c(5,3.6)}
+# Graficamos los resultados
+ggplot() +
+  geom_col(aes(x = 1:length(analisis), y = analisis), fill = "#2C5985") +
+  geom_smooth(aes(x = 1:length(analisis), y = analisis, fill = "Tendencia"), 
+              se = FALSE, colour = "#C11C06") +
+  geom_hline(yintercept = 0) +
+  labs(title = "Analisis de disposición",
+       subtitle = "Estrategia de direccionamiento \nEntrevista a personal",
+       x = "Número de pregunta", y = "Valoración") +
+  guides(fill = guide_legend(title = "")) +
+  theme_minimal(base_size = 8) +
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "bottom")
+  
+```
+
+## Análisis de disposición aplicado a la codificación de dedoose
+
+En el apartado anterior se mostró como la característica *estrategia de direccionamiento* posee una disposición positiva por parte de los entrevistados. Luego de ello se procedió a aplicar el análisis de disposición a extractos de texto dispersos en la entrevista pero que guardaban una relación con dicha característica.
+
+```{r Codigos_dedoose, codigos_estrategia, echo=FALSE}
+codigos <- scan(file = "E:/Documentos/INAP/Rutina_encuestras/Pruebas/ED Dedoose 01 Est_Dir.txt",
+                what = character(), sep = "\n", fileEncoding = "UTF-8",
+                allowEscapes = T)
+```
+
+```{r analisis_codigos, echo=FALSE}
+analisis_codigos <- c()
+# Ciclo para realizar el analisis de disposicion
+for (i in seq_along(codigos)) {
+  analisis_codigos[i] <- sum(disposicion(texto = codigos[i], diccionario = "nrc"))
+}
+rm(i)
+```
+
+Al sumar las valoraciones de cada uno de los textos se obtuvo como resultado 11 mostrando una disposición positiva hacia la característica y obteniendo la misma conclusión que el análisis aplicado a las respuestas de las entrevistas.
+
+De igual forma, esto se puede visualizar por medio del gráfico de valoraciones de cada uno de los textos en el cual se observa que la mayoría están sobre el cero.
+
+```{r grafica_estrategia_codigos, echo=FALSE, message=FALSE, fig.dim=c(5,3.6)}
+ggplot() +
+  geom_col(aes(x = 1:length(analisis_codigos), 
+               y = analisis_codigos), 
+           fill = "#2C5985") +
+  geom_smooth(aes(x = 1:length(analisis_codigos), 
+                  y = analisis_codigos, 
+                  fill = "Tendencia"), 
+              se = FALSE, colour = "#C11C06") +
+  geom_hline(yintercept = 0) +
+  labs(title = "Analisis de disposición",
+       subtitle = "Estrategia de direccionamiento \nCódigos dedoose",
+       x = "Número de texto", y = "Disposición") +
+  guides(fill = guide_legend(title = "")) +
+  theme_minimal(base_size = 8) +
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "bottom")
+```
+
+# Transformación aplicada a los datos
+
+En este apartado se presenta la transformación aplicada a los resultados del análisis de disposición para acotarlos en el intervalo de -1 a 1. Esto como un paso intermedio en la elaboración del índice *Guía de entrevista para personal directivo*.
+
+La transformación hace uso de la función arco tangente pero modificada.
+
+$$
+y = \frac{2}{\pi}arctg(\frac{x}{k})
+$$
+
+donde:
+
+$x = \text{Es el resultado del analisis de disposicón}$
+
+$k = \text{Es una constante mayor o igual que 1}$
+
+Aplicando la transformación para distintos valores de k los resultados tendrían el siguiente comportamiento.
+
+```{r comportamiento_ks, echo=FALSE, message=FALSE}
+# Generamos los datos
+x <- seq(-20, 20, 0.5)
+y <- list()
+k <- seq(1, 5, by = 0.5)
+id <- list()
+
+for (i in seq_along(k)) {
+  y[[i]] <- (2/pi)*atan(x/k[i])
+  id[[i]] <- replicate(length(x), paste("k =", k[i]))
+}
+rm(i)
+
+# Generamos el dataframe
+atan_df <- data.frame("x" = rep(x, length(k)), "y" = unlist(y), "id" = unlist(id))
+
+rm(x,y,k,id)
+```
+
+```{r grafica_comportamiento, echo = FALSE, message = FALSE, fig.dim=c(5.5,4)}
+ggplot(data = atan_df, aes(x = x, y = y, colour = id)) +
+  geom_line() +
+  paletteer::scale_color_paletteer_d("awtools::bpalette") +
+  labs(title = "Comportamiento",
+       subtitle = "Distintos valores de k",
+       y = "Transformación", x = "",
+       colour = "") +
+  theme_minimal() +
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "bottom")
+```
+
+Como se observa, cuando k aumenta la transformación se aproxima a un comportamiento lineal. El objetivo es encontrar un valor de k tal que al momento de aplicar la transforamción no exista una discrepancia en la proporción que existe entre los datos, entiendose la proporción como el conciente entre la observación $x_i$ y otra $x_j$.
+
+$$
+\text{Proporción}_{i,j} = \frac{x_i}{x_j}
+$$
+
+Para tal fin se procedió a elaborar una *medida de proporcionalidad global* que sirvió de parámetro para la elección del mejor valor de k. Esta medida de proporcionalidad está construída de la siguiente maenra:
+
+$$
+P_{max,i}=\frac{max}{x_1} + \frac{max}{x_2} + \frac{max}{x_3} + ...+ \frac{max}{x_2}
+$$ 
+Que puede ser escrita de la siguiente forma:
+
+$$
+P_{max,i} = \sum_{i=1}^n\frac{max}{x_i}
+$$
+
+Donde:
+
+$\text{max: Es el valor máximo de las observaciones}$
+
+$x_i: \text{Es la i-ésima de las observaciones}$
+
+Además $x_i$ puede ser igual a $max$
+
+Una vez se calcula la *medida de proporcionalidad global* sobre los datos originales esta se vuelve a estimar sobre los datos transformados para cada uno de los valores de $k$ considerados. El mejor valor de $k$ es aquel que hace mínima la diferencia entre la medida original y la obtenida de la transforamción para el $k$ asociado.
+
+## Selección de la transformación para el análisis de *"Estrategia de direccionamiento"*
+
+```{r proporcionalidad_global, include=FALSE}
+
+p_max_original <- sum(max(analisis_codigos)/analisis_codigos[max(analisis_codigos)/analisis_codigos!=Inf])
+
+```
+
+El primer paso en la selección de la mejor transformación consistió en calcular la *medida de proporcionalidad global* sobre los datos originales[^1], ésta dió como resultado **29.33**.
+
+En segundo lugar se procedió a calcular la medida para valores de $k\geq1$ obteniendo los siguientes resultados:
+
+```{r proporcionalidad_k, include = FALSE}
+# Primero se aplica la transformación
+k <- c(1:10)
+tr <- list()
+
+for (i in k) {
+  tr[[i]] <- (2/pi)*atan(analisis_codigos/i)
+}
+
+# Luego se calcula la medida de proporcionalidad
+
+pr_codigos <- c()
+
+for (i in seq_along(tr)) {
+ pr_codigos[i] <- sum(max(tr[[i]])/tr[[i]][tr[[i]]!=0])
+}
+
+rm(k,i)
+```
+
+| Valor de $k$ asociado | Proporcionalidad inicial | Proporcionalidad de la transformación |
+|:---------------------:|:------------------------:|:-------------------------------------:|
+|           1           |          29.33           |                 11.12                 |
+|           2           |          29.33           |                 15.65                 |
+|           3           |          29.33           |                 19.20                 |
+|           4           |          29.33           |                 21.76                 |
+|           5           |          29.33           |                 23.57                 |
+|           6           |          29.33           |                 24.85                 |
+|           7           |          29.33           |                 25.78                 |
+|           8           |          29.33           |                 26.46                 |
+|           9           |          29.33           |                 26.97                 |
+|          10           |          29.33           |                 27.37                 |
+
+Donde se observa que en el valor de $k$ que minimiza la diferencia entre las medidas de proporcionalidad es $k = 10$, por lo que la transformación aplicada a los resultados del análisis de disposición quedó definida por este valor.
+
+### Resultados del análisis de sentimientos aplicando la transformación $\text{arco tangente}$
+
+Los resultados de aplicar la transforamción arco tangente como se especificó anteriormente con un valor de $k = 10$ se comparan con los resultados iniciales para visualizar que la transformación únicamente modificó la escala de los datos.
+
+\pagebreak
+
+```{r graficas_conjuntas, fig.show='hold', echo=FALSE, message=FALSE, fig.dim= c(4.3, 3.8), out.extra= "angle = 90"}
+
+# Resultados transformados
+ggplot() +
+  geom_col(aes(x = 1:length(analisis_codigos), y = tr[[10]]), 
+           fill = "#2C5985") +
+  geom_smooth(aes(x = 1:length(analisis_codigos), y = tr[[10]], 
+                  fill = "Tendencia"), 
+              se = FALSE, colour = "#C11C06") +
+  geom_hline(yintercept = 0) +
+  labs(title = "Analisis de disposición",
+       subtitle = "Transformación códigos dedoose",
+       x = "Número de texto", y = "Disposición") +
+  guides(fill = guide_legend(title = "")) +
+  theme_minimal(base_size = 8) +
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "bottom")
+
+# Resultados originales
+ggplot() +
+  geom_col(aes(x = 1:length(analisis_codigos), 
+               y = analisis_codigos), 
+           fill = "#2C5985") +
+  geom_smooth(aes(x = 1:length(analisis_codigos), 
+                  y = analisis_codigos, 
+                  fill = "Tendencia"), 
+              se = FALSE, colour = "#C11C06") +
+  geom_hline(yintercept = 0) +
+  labs(title = "Analisis de disposición",
+       subtitle = "Estrategia de direccionamiento \nCódigos dedoose",
+       x = "Número de texto", y = "Disposición") +
+  guides(fill = guide_legend(title = "")) +
+  theme_minimal(base_size = 8) +
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "bottom")
+
+```
+
+[^1]: Para los cálculos se considero que $x_i$ = $\text{max}$ estaría dentro de la suma.
