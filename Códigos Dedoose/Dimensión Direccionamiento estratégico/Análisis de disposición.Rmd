@@ -1,0 +1,278 @@
+---
+title: "Análisis de disposición"
+subtitle: "Aplicado a las características de direccionamiento estratégico"
+output: 
+  pdf_document:
+    df_print: kable
+lang: "es"
+documentclass: article
+geometry:  margin = 0.8in
+classoption: letter
+fontsize: 15pt
+---
+
+```{r librerias, include = FALSE}
+rm(list = ls())
+
+# Opciones generales de las gráficas
+knitr::opts_chunk$set(fig.align = "center")
+
+# Librerias a utiliar
+library(tidyverse)
+library(ggstatsplot)
+source("E:/Documentos/INAP/Rutina_encuestras/funcion_disposicion.R")
+```
+
+\pagebreak
+
+# Análisis de disposición
+
+El análisis de disposición se aplicó a la dimensión *Estrategia de direccionamiento* para cada una de sus características. Estas son:
+
+1.  Estrategia de direccionamiento
+2.  Inovación y disposición al cambio
+3.  Clima organizacional
+4.  Mecanismos de comunicación y coordinación
+5.  Enfoque de gestión por procesos
+
+Los cálculos son utilizados para el cáculo del Índice de Direccionamiento Estrategico (IDE). Además de ello se presentan los índices para cada una de las características de la dimensión en un rango de 0 a 1. Una Característica con un valor menor 0.5 indica que hay una disposición negativa mientras que una característica mayor a 0.5 indica una disposición positiva.
+
+```{r text_estrategia, include = FALSE}
+# Importando el texto de los códigos
+# Los archivos txt se importa con la función scan y deben usarse
+# los siguientes argumentos:
+# what: para indicar que estamos usando caracteres
+# fileEncoding: UTF-8 para que lea los caracteres en español
+# sep: "\n" para indicar que la separación de cada texto es por espacio
+estr <- scan("E:/Documentos/INAP/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/1.1 Estrategia de direccionamiento.txt",
+             what = character(), fileEncoding = "UTF-8", sep = "\n",
+             allowEscapes = T)
+
+# Texto inovación y disposición al cambio
+innov <- scan("E:/Documentos/INAP/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/1.2 Inovación y disposición al cambio.txt",
+             what = character(), fileEncoding = "UTF-8", sep = "\n",
+             allowEscapes = T)
+
+# Texto clima organizacional
+clima <- scan("E:/Documentos/INAP/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/1.3 Clima organizacional.txt",
+             what = character(), fileEncoding = "UTF-8", sep = "\n",
+             allowEscapes = T)
+
+# Texto mecanismos de comunicacion
+mecan <- scan("E:/Documentos/INAP/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/1.4 Mecanísmo de comunicación.txt",
+             what = character(), fileEncoding = "UTF-8", sep = "\n",
+             allowEscapes = T)
+
+# Texto Enfoque de gestion por procesos
+gestion <- scan("E:/Documentos/INAP/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/1.5 Enfoque de gestión por procesos.txt",
+             what = character(), fileEncoding = "UTF-8", sep = "\n",
+             allowEscapes = T)
+```
+
+```{r analisis_str, include = FALSE}
+# Análisis
+# Da como resultado las ponderaciones de cada palabra
+# Analisis de estrategia de direccionamiento
+analisis_estrtegia <- disposicion(estr)
+
+# Analisis de inovacion y disposicion al cambio
+analisis_innovacion <- disposicion(innov)
+
+# Analisis de clima organizacional
+analisis_clima <- disposicion(clima)
+
+# Analisis de mecanimos de comunicacion
+analisis_mecan <- disposicion(mecan)
+
+# Analisis de enfoque de gestion por procesos
+analisis_gestion <- disposicion(gestion)
+```
+
+```{r graficas, message=FALSE, include=FALSE}
+
+# Grafica estrategia de direccionamiento
+estr_p <- ggplot() +
+  geom_col(aes(x = 1:length(analisis_estrtegia), 
+               y = (2/pi)*atan(analisis_estrtegia/10)),
+           fill = "#2C5985") +
+  geom_smooth(aes(x = 1:length(analisis_estrtegia), 
+                  y = (2/pi)*atan(analisis_estrtegia/10),
+                  fill = "Tendencia"),
+              se = FALSE, colour = "#C11C06") +
+  geom_hline(yintercept = 0) +
+  labs(title = "Análisis de disposición",
+       subtitle = "Estrategia de direccionamiento",
+       x = "", y = "Ponderación") +
+  guides(fill = guide_legend(title = "")) +
+  theme_minimal(base_size = 9) +
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "bottom")
+
+# Grafica inovación y disposición al cambio
+innv_p <- ggplot() +
+  geom_col(aes(x = 1:length(analisis_innovacion), 
+               y = (2/pi)*atan(analisis_innovacion/10)),
+           fill = "#2C5985") +
+  geom_smooth(aes(x = 1:length(analisis_innovacion), 
+                  y = (2/pi)*atan(analisis_innovacion/10),
+                  fill = "Tendencia"),
+              se = FALSE, colour = "#C11C06") +
+  geom_hline(yintercept = 0) +
+  labs(title = "Análisis de disposición",
+       subtitle = "Inovación y disposición al cambio",
+       x = "", y = "Ponderación") +
+  guides(fill = guide_legend(title = "")) +
+  theme_minimal(base_size = 9) +
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "bottom")
+
+# Grafica clima organizacional
+clima_p <- ggplot() +
+  geom_col(aes(x = 1:length(analisis_clima), 
+               y = (2/pi)*atan(analisis_clima/10)),
+           fill = "#2C5985") +
+  geom_smooth(aes(x = 1:length(analisis_clima), 
+                  y = (2/pi)*atan(analisis_clima/10),
+                  fill = "Tendencia"),
+              se = FALSE, colour = "#C11C06") +
+  geom_hline(yintercept = 0) +
+  labs(title = "Análisis de disposición",
+       subtitle = "Clima organizacional",
+       x = "", y = "Ponderación") +
+  guides(fill = guide_legend(title = "")) +
+  theme_minimal(base_size = 9) +
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "bottom")
+
+# Grafica mecanismos de organizacion
+mecan_p <- ggplot() +
+  geom_col(aes(x = 1:length(analisis_mecan), 
+               y = (2/pi)*atan(analisis_mecan/10)),
+           fill = "#2C5985") +
+  geom_smooth(aes(x = 1:length(analisis_mecan), 
+                  y = (2/pi)*atan(analisis_mecan/10),
+                  fill = "Tendencia"),
+              se = FALSE, colour = "#C11C06") +
+  geom_hline(yintercept = 0) +
+  labs(title = "Análisis de disposición",
+       subtitle = "Mecanismos de comunicación",
+       x = "", y = "Ponderación") +
+  guides(fill = guide_legend(title = "")) +
+  theme_minimal(base_size = 9) +
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "bottom")
+
+# Grafica enfoque de gestion por procesos
+gestion_p <- ggplot() +
+  geom_col(aes(x = 1:length(analisis_gestion), 
+               y = (2/pi)*atan(analisis_gestion/10)),
+           fill = "#2C5985") +
+  geom_smooth(aes(x = 1:length(analisis_gestion), 
+                  y = (2/pi)*atan(analisis_gestion/10),
+                  fill = "Tendencia"),
+              se = FALSE, colour = "#C11C06") +
+  geom_hline(yintercept = 0) +
+  labs(title = "Análisis de disposición",
+       subtitle = "Enfoque de gestión por procesos",
+       x = "", y = "Ponderación") +
+  guides(fill = guide_legend(title = "")) +
+  theme_minimal(base_size = 9) +
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "bottom")
+```
+
+```{r indice_caracteristica, include = FALSE}
+# Indice 0 a 1 estrategia de direccionamiento
+c_estrategia <- sum(analisis_estrtegia)/sum(analisis_estrtegia != 0)
+c_estrategia_tan <- (2/pi)*atan(c_estrategia/10)
+c_estrategia_cero_uno <- 0.5*(c_estrategia_tan + 1)
+
+# Indice 0 a 1 inovacion y disposicion al cambio
+c_innovacion <- sum(analisis_innovacion)/sum(analisis_innovacion != 0)
+c_innovacion_tan <- (2/pi)*atan(c_innovacion/10)
+c_innovacion_cero_uno <- 0.5*(c_innovacion_tan + 1)
+
+# Indice 0 a 1 clima organizacional
+c_clima <- sum(analisis_clima)/sum(analisis_clima != 0)
+c_clima_tan <- (2/pi)*atan(c_clima/10)
+c_clima_cero_uno <- 0.5*(c_clima_tan + 1)
+
+# Indice 0 a 1 mecanimos de organizacion
+c_mecanismos <- sum(analisis_mecan)/sum(analisis_mecan != 0)
+c_mecanismo_tan <- (2/pi)*atan(c_mecanismos/10)
+c_mecanismos_cero_uno <- 0.5*(c_mecanismo_tan + 1)
+
+# Indice 0 a 1 enfoque de gestion por procesos
+c_gestion <- sum(analisis_gestion)/sum(analisis_gestion != 0)
+c_gestion_tan <- (2/pi)*atan(c_gestion/10)
+c_gestion_cero_uno <- 0.5*(c_gestion_tan + 1)
+```
+
+| Característica                     | Índice      |
+|------------------------------------|-------------|
+| Estrategia de direccionamiento     | 0.542327845 |
+| Innovación y disposición al cambio | 0.534873880 |
+| Clima organizacional               | 0.541519694 |
+| Mecanismos de comunicación         | 0.531009088 |
+| Enfoque de gestión por procesos    | 0.542593357 |
+
+: Índices por característica
+
+```{r, message=FALSE, echo=FALSE, fig.dim = c(7,4)}
+combine_plots(list(estr_p, innv_p, clima_p, mecan_p, gestion_p),
+              annotation.args = list(
+                title = "Análisis de disposición aplicado a todas las características", 
+                subtitle = "Direccionamiento Estrategico", 
+                theme = theme(legend.position = "bottom",
+                              plot.title = element_text(face = "bold", hjust = 0.5),
+                              plot.subtitle = element_text(hjust = 0.5))))
+```
+
+# Cálculo del IDE
+
+Para transformar el índice se procedió a dividir la suma de cada característica entre el total de palabras efectivas de la siguiente forma:
+
+$$
+X_i=\frac{\sum_{i=1}^nx_i}{\text{Total palabras efectivas}}
+$$
+
+```{r, include=FALSE}
+# Hacemos el calculo de cada característica con la formula
+# Anteriormente descrita
+c_estrategia <- sum(analisis_estrtegia)/sum(analisis_estrtegia != 0)
+c_innovacion <- sum(analisis_innovacion)/sum(analisis_innovacion != 0)
+c_clima <- sum(analisis_clima)/sum(analisis_clima != 0)
+c_mecanismos <- sum(analisis_mecan)/sum(analisis_mecan != 0)
+c_gestion <- sum(analisis_gestion)/sum(analisis_gestion != 0)
+
+# Sumamos todas las características para transformalas posteriormente
+# Con la tangente inversa y la línea recta
+valores_sum <- mean(c(c_estrategia,
+                     c_innovacion,
+                     c_clima,
+                     c_mecanismos,
+                     c_gestion))
+```
+
+Aplicamos la transformación por medio de la tantente inversa para acotar la suma entre -1 y 1 y por último la transformación por línea recta para acotar el IDE entre 0 y 1.
+
+$y = \frac{2}{\pi}arctan(\frac{x}{10})$
+
+$y = 0.5(x+1)$
+
+```{r, include=FALSE}
+valores_arctan <- (2/pi)*atan(valores_sum/10)
+valores_cero_uno <- 0.5*(valores_arctan + 1)
+```
+
+El resultado del IDE es 0.6737.
+
+# Valoración de cada palabra
+Se presenta la valoración positiva o negativa de cada palabra para estrategia de direccionamiento:
+```{r ponderaciones, include=FALSE}
+estr <- estr[10]
+analisis_estrtegia_1 <- disposicion(estr)
+#estr <- get_tokens(estr)
+
+```
+
