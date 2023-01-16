@@ -2,6 +2,7 @@
 
 disposicion <- function(texto, diccionario = "nrc"){
   library(tidyverse)
+  library()
   texto <- tolower(texto)
   palabras <- unlist(strsplit(texto, "\\W"))
   palabras <- palabras[which(palabras != "")]

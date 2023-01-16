@@ -1,0 +1,145 @@
+---
+title: "Análisis de sentimientos nrc y afinn"
+author: "Jorge Orenos"
+output: pdf_document
+lang: "es"
+documentclass: article
+---
+
+\pagebreak
+
+```{r librerias, include=FALSE, message=FALSE}
+# Limpiamos el área de trabajo
+rm(list = ls())
+# Cargamos librerias
+library(tidyverse)
+library(ggstatsplot)
+source("E:/Documentos/INAP/Rutina_encuestras/funcion_disposicion.R")
+```
+
+```{r texto, include=FALSE}
+estr <- scan("E:/Documentos/INAP/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/1.1 Estrategia de direccionamiento.txt",
+               what = character(), sep = "\n", fileEncoding = "UTF-8", allowEscapes = T)
+
+innov <- scan("E:/Documentos/INAP/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/1.2 Inovación y disposición al cambio.txt",
+               what = character(), sep = "\n", fileEncoding = "UTF-8", allowEscapes = T)
+
+clima <- scan("E:/Documentos/INAP/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/1.3 Clima organizacional.txt",
+               what = character(), sep = "\n", fileEncoding = "UTF-8", allowEscapes = T)
+
+mecan <- scan("E:/Documentos/INAP/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/1.4 Mecanísmo de comunicación.txt",
+               what = character(), sep = "\n", fileEncoding = "UTF-8", allowEscapes = T)
+
+gestion <- scan("E:/Documentos/INAP/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/1.5 Enfoque de gestión por procesos.txt",
+               what = character(), sep = "\n", fileEncoding = "UTF-8", allowEscapes = T)
+```
+
+# Análisis de sentimientos aplicado a direccionamiento estrategico
+
+El análisis de disposición se aplicó a la dimensión *Estrategia de direccionamiento* para cada una de sus características. Estas son:
+
+1.  Estrategia de direccionamiento
+2.  Inovación y disposición al cambio
+3.  Clima organizacional
+4.  Mecanismos de comunicación y coordinación
+5.  Enfoque de gestión por procesos
+
+Los cálculos son utilizados para el cáculo del Índice de Direccionamiento Estrategico (IDE). Además de ello se presentan los índices para cada una de las características de la dimensión en un rango de 0 a 1. Una Característica con un valor menor 0.5 indica que hay una disposición negativa mientras que una característica mayor a 0.5 indica una disposición positiva.
+
+## Análisis elaborado con el diccionario **afinn**
+
+El diccionario fue creado por Finn Arup Nielsen de la Universidad Técnica de Dinamarca. Los resultados obtenidios son los siguientes:
+
+| Característica                     | Valoración |
+|------------------------------------|------------|
+| Estrategia de direccionamiento     | 84         |
+| Innovación y disposición al cambio | 36         |
+| Clima Organizacional               | 82         |
+| Mecanismos de comunicación         | 56         |
+| Enfoque de gestión por procesos    | 40         |
+
+: Restulados del análisis de disposición con el diccionario afinn
+
+```{r graficas_afinn, include=FALSE, message=FALSE}
+# Gráfica estrategia de direccionamiento
+estr_p <- ggplot() +
+  geom_col(aes(x = 1:length(analisis_estr),
+           y = (2/pi)*atan(analisis_estr/10)), fill = "#2A5783") +
+  geom_smooth(aes(x = 1:length(analisis_estr),
+           y = (2/pi)*atan(analisis_estr/10),
+           fill = "Tendencia"), se = FALSE, colour = "#9C0824") +
+  guides(fill = guide_legend(title = "")) +
+  geom_hline(yintercept = 0) +
+  labs(title = "Estrategia de direccionamiento",
+       y = "Ponderación", x = "") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5))
+
+innov_p <- ggplot() +
+  geom_col(aes(x = 1:length(analisis_innov),
+           y = (2/pi)*atan(analisis_innov/10)), fill = "#2A5783") +
+  geom_smooth(aes(x = 1:length(analisis_innov),
+           y = (2/pi)*atan(analisis_innov/10),
+           fill = "Tendencia"), se = FALSE, colour = "#9C0824") +
+  guides(fill = guide_legend(title = "")) +
+  geom_hline(yintercept = 0) +
+  labs(title = "Innovación y disposiciónal cambio",
+       y = "Ponderación", x = "") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5))
+
+clima_p <- ggplot() +
+  geom_col(aes(x = 1:length(analisis_clima),
+           y = (2/pi)*atan(analisis_clima/10)), fill = "#2A5783") +
+  geom_smooth(aes(x = 1:length(analisis_clima),
+           y = (2/pi)*atan(analisis_clima/10),
+           fill = "Tendencia"), se = FALSE, colour = "#9C0824") +
+  guides(fill = guide_legend(title = "")) +
+  geom_hline(yintercept = 0) +
+  labs(title = "Clima Organizacional",
+       y = "Ponderación", x = "") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5))
+```
+
+```{r analisis_afinn, include=FALSE}
+# Análisis estrategia de direccionamiento
+analisis_estr <- c()
+for (i in seq_along(estr)) {
+  valor <- disposicion(estr[i], diccionario = "afinn")
+  analisis_estr[i] <- valor[[2]]
+}
+
+# Análisis innovación y disposición al cambio
+analisis_innov <- c()
+for (i in seq_along(innov)) {
+  valor <- disposicion(innov[i], diccionario = "afinn")
+  analisis_innov[i] <- valor[[2]]
+}
+
+# Análisis clima organizacional
+analisis_clima <- c()
+for (i in seq_along(clima)) {
+  valor <- disposicion(clima[i], diccionario = "afinn")
+  analisis_clima[i] <- valor[[2]]
+}
+
+# Análisis mecanismos de comunicación
+analisis_mecan <- c()
+for (i in seq_along(mecan)) {
+  valor <- disposicion(mecan[i], diccionario = "afinn")
+  analisis_mecan[i] <- valor[[2]]
+}
+
+# Análisis enfoque en gestión por procesos
+analisis_gestion <- c()
+for (i in seq_along(gestion)) {
+  valor <- disposicion(gestion[i], diccionario = "afinn")
+  analisis_gestion[i] <- valor[[2]]
+}
+
+rm(valor)
+```
