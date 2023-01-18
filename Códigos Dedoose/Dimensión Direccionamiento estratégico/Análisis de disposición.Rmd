@@ -158,3 +158,29 @@ en donde:
 \item $\#n$ es el número de palabras con connotación negativa.
 \end{itemize}
 ```
+
+```{r Transformaciones, include=FALSE}
+analisis_estr_df <- list() #porque vamos a guardar dataframes
+
+for (i in seq_along(estr)) {
+  valor <- disposicion(estr[i], diccionario = "afinn")
+  analisis_estr_df[[i]] <- valor[[1]]
+}
+analisis_estr_df <- analisis_estr_df[analisis_estr!=0]
+
+vp_1 <- 0
+vn_1 <- 0
+np_1 <- 0
+nn_1 <- 0
+for (i in seq_along(analisis_estr_df)) {
+  vp_1 <- vp_1+sum(analisis_estr_df[[i]]$positivas)
+  vn_1 <- vn_1+sum(analisis_estr_df[[i]]$negativas)
+  np_1 <- np_1+sum(analisis_estr_df[[i]]$negativas==FALSE)
+  nn_1 <- nn_1+sum(analisis_estr_df[[i]]$positivas==FALSE)
+}
+
+
+```
+
+
+
