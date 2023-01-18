@@ -159,24 +159,40 @@ en donde:
 \end{itemize}
 ```
 
+<<<<<<< HEAD
 ```{r Transfomraciones_Afinn, include=FALSE}
 analisis_estr_df <- list()
+=======
+```{r Transformaciones, include=FALSE}
+analisis_estr_df <- list() #porque vamos a guardar dataframes
+
+>>>>>>> bb94e4113bdd8632b786699a114ee0d7662040b0
 for (i in seq_along(estr)) {
   valor <- disposicion(estr[i], diccionario = "afinn")
   analisis_estr_df[[i]] <- valor[[1]]
 }
+<<<<<<< HEAD
 analisis_estr_df <-  analisis_estr_df[analisis_estr!=0]
+=======
+analisis_estr_df <- analisis_estr_df[analisis_estr!=0]
+
+>>>>>>> bb94e4113bdd8632b786699a114ee0d7662040b0
 vp_1 <- 0
 vn_1 <- 0
 np_1 <- 0
 nn_1 <- 0
+<<<<<<< HEAD
 for (i in seq_along(analisis_estr_df)){
+=======
+for (i in seq_along(analisis_estr_df)) {
+>>>>>>> bb94e4113bdd8632b786699a114ee0d7662040b0
   vp_1 <- vp_1+sum(analisis_estr_df[[i]]$positivas)
   vn_1 <- vn_1+sum(analisis_estr_df[[i]]$negativas)
   np_1 <- np_1+sum(analisis_estr_df[[i]]$negativas==FALSE)
   nn_1 <- nn_1+sum(analisis_estr_df[[i]]$positivas==FALSE)
 }
 
+<<<<<<< HEAD
 Promedio_absoluto_ED <- vp_1/np_1-vn_1/nn_1
 
 analisis_innov_df <- list()
@@ -263,10 +279,15 @@ c <- 1
 y1 <- (2*(c)/pi)*(atan(promedios_absolutos/(10*c)))
 
 y2 <- (1/(2*c))*(y1+c)
+=======
+>>>>>>> bb94e4113bdd8632b786699a114ee0d7662040b0
 
 ```
 
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> bb94e4113bdd8632b786699a114ee0d7662040b0
