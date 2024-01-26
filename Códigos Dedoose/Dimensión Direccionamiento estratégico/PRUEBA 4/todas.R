@@ -1,20 +1,20 @@
 # Limpiamos el área de trabajo
 rm(list = ls())
-source("C:/Users/alexa/OneDrive/Desktop/Rutina_encuestras/funcion_disposicion.R")
+source("C:/Users/salay/Desktop/Rutina_encuestras/funcion_disposicion.R")
 
-estr <- scan("C:/Users/alexa/OneDrive/Desktop/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/PRUEBA 3/ED.txt",
+estr <- scan("C:/Users/salay/Desktop/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/PRUEBA 4/ED.txt",
              what = character(), sep = "\n", fileEncoding = "UTF-8", allowEscapes = T)
 
-innov <- scan("C:/Users/alexa/OneDrive/Desktop/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/PRUEBA 3/BI.txt",
+innov <- scan("C:/Users/salay/Desktop/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/PRUEBA 4/BI.txt",
               what = character(), sep = "\n", fileEncoding = "UTF-8", allowEscapes = T)
 
-clima <- scan("C:/Users/alexa/OneDrive/Desktop/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/PRUEBA 3/CO.txt",
+clima <- scan("C:/Users/salay/Desktop/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/PRUEBA 4/CO.txt",
               what = character(), sep = "\n", fileEncoding = "UTF-8", allowEscapes = T)
 
-mecan <- scan("C:/Users/alexa/OneDrive/Desktop/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/PRUEBA 3/MC.txt",
+mecan <- scan("C:/Users/salay/Desktop/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/PRUEBA 4/MC.txt",
               what = character(), sep = "\n", fileEncoding = "UTF-8", allowEscapes = T)
 
-gestion <- scan("C:/Users/alexa/OneDrive/Desktop/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/PRUEBA 3/GPR.txt",
+gestion <- scan("C:/Users/salay/Desktop/Rutina_encuestras/Códigos Dedoose/Dimensión Direccionamiento estratégico/PRUEBA 4/GPR.txt",
                 what = character(), sep = "\n", fileEncoding = "UTF-8", allowEscapes = T)
 
 
@@ -171,7 +171,6 @@ y1 <- (2*(c)/pi)*(atan(razones/(1.8)))
 y1
 y2 <- (1/(2*c))*(y1+c)
 y2
-
 
 
 
